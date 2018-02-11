@@ -11,6 +11,16 @@ use Auth;
 class AllocationController extends Controller
 {
     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -35,11 +45,11 @@ class AllocationController extends Controller
 
         // myself
         $myself_allocations = Auth::user()->allocations;
-        foreach ($allocations as $allocationkey => $allocation) {
-            $myself_allocations->outstock_subagent = array_sum(array_column($myself_allocations->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
-            $myself_allocations->outstock_panel = array_sum(array_column($myself_allocations->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
-            $myself_allocations->outstock_outlet = array_sum(array_column($myself_allocations->transactions->where('buyer_type','outstock_outlet')->toArray(), 'quantity'));
-            $myself_allocations->outstock_counter = array_sum(array_column($myself_allocations->transactions->where('buyer_type','outstock_counter')->toArray(), 'quantity'));
+        foreach ($myself_allocations as $allocationkey => $allocation) {
+            $allocation->outstock_subagent = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
+            $allocation->outstock_panel = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
+            $allocation->outstock_outlet = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_outlet')->toArray(), 'quantity'));
+            $allocation->outstock_counter = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_counter')->toArray(), 'quantity'));
         }
         return view('allocation',compact('users_allocations','myself_allocations'));
     }
