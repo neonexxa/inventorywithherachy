@@ -7,6 +7,7 @@ use App\Allocation;
 use App\User;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -25,9 +26,16 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $transactions = Transaction::all();
+        $param = $request->all();
+        if (empty($param['date'])) {
+            $param['date'] = Carbon::now('Asia/Singapore')->format('Y-m-d');
+            $transaction_date = $param['date'];
+        }else{
+            $transaction_date = $param['date'];
+        }
+
         $users = User::where('role','>',Auth::user()->role)->orderBy('role','asc')->get();
         $users_allocations = [];
         foreach ($users as $key => $user) {
@@ -46,7 +54,7 @@ class TransactionController extends Controller
         }
 
         // transaction myself
-        $myself_allocations = Auth::user()->allocations;
+        $myself_allocations = Auth::user()->allocations;//()->whereDate('created_at', '=', date($param['date']))->get();
         foreach ($myself_allocations as $allocationkey => $allocation) {
             $allocation->outstock_subagent = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
             $allocation->outstock_panel = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
@@ -56,8 +64,8 @@ class TransactionController extends Controller
                 $transaction->profit = $transaction->price-$allocation->modal_price;
             }
         }
-        // dd($myself_allocations);
-        return view('transaction',compact('users_allocations','myself_allocations'));
+        
+        return view('transaction',compact('users_allocations','myself_allocations','transaction_date'));
     }
 
     /**
