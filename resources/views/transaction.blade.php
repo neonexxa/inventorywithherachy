@@ -33,7 +33,7 @@
 		    @default
 		        OPS TOO POWERFUL
 		@endswitch
-		{{ Auth::user()->name }}
+		{{ Auth::user()->name }} (myself)
 	</label>
 	@foreach ($myself_allocations as $allocationkey => $allocation) 
 	<div class="row">
@@ -115,7 +115,7 @@
 			    @default
 			        OPS TOO POWERFUL
 			@endswitch
-			{{ \App\User::find($user_id)->name }}
+			{{ \App\User::find($user_id)->name }} 
 		</label>
         @foreach ($allocations as $allocationkey => $allocation) 
 			<div class="row">

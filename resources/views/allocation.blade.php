@@ -36,7 +36,7 @@
 				    @default
 				        OPS TOO POWERFUL
 				@endswitch
-				{{ Auth::user()->name }}
+				{{ Auth::user()->name }} (myself)
 			</label>
 			<table class="table table-hover">
 				<thead>

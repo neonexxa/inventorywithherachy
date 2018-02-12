@@ -5,8 +5,13 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
+                @if(array_sum(array_column($allocations->toArray(), 'availability')) == 0)
+                <div class="panel-heading">Opps No allocation available</div>   
+                <div class="panel-body">
+                    <a href="{{ route('allocation.create') }}" class="btn btn-primary">ADD ALLOCATION</a>
+                </div>
+                @else
                 <div class="panel-heading">New Transaction</div>
-
                 <div class="panel-body">
                 	<form action="{{ route('transaction.store') }}" method="POST">
                 		{{ csrf_field() }}
@@ -36,6 +41,7 @@
 						<button type="submit" class="btn btn-success">Create</button>
 					</form>
                 </div>
+                @endif
             </div>
         </div>
 	</div>
