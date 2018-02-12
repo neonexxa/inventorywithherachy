@@ -6,6 +6,10 @@
 	<div class="row">
 		<div class="col-md-2">
 			<a href="{{ route('allocation.create') }}" class="btn btn-primary">ADD ALLOCATION</a>
+			<form action="{{route('allocation.index')}}" method="GET">
+				<input type="date" name="date">	
+				<button type="submit" class="btn btn-success">VIEW</button>
+			</form>
 		</div>
 	</div>
 	{{-- begining of myself --}}
@@ -46,6 +50,7 @@
 						<th scope="col">Outstock-outlet</th>
 						<th scope="col">Outstock-panel</th>
 						<th scope="col">Outstock-subagent</th>
+						<th scope="col">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -60,15 +65,14 @@
 						<td>{{ (is_null($allocation->outstock_outlet))? 0 : $allocation->outstock_outlet }}</td>
 						<td>{{ (is_null($allocation->outstock_panel))? 0 : $allocation->outstock_panel }}</td>
 						<td>{{ (is_null($allocation->outstock_subagent))? 0 : $allocation->outstock_subagent }}</td>
-						{{-- 
 						<td>
-							<a class="btn btn-warning" href="{{ route('stock.edit',['stock'=> $stock->id]) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> 
-							<form action="{{route('stock.destroy',['stock'=>$stock->id])}}" method="POST">
+							<a class="btn btn-warning" href="{{ route('allocation.edit',['allocation'=> $allocation->id]) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> 
+							<form action="{{route('allocation.destroy',['allocation'=>$allocation->id])}}" method="POST">
 								{{ csrf_field() }}
 								<input type="hidden" name="_method" value="delete">
 								<button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
 							</form>
-						</td> --}}
+						</td>
 					</tr>
 					@endforeach
 				</tbody>
@@ -102,6 +106,10 @@
 				@endswitch
 				{{ \App\User::find($user_id)->name }}
 			</label>
+			<br>
+			@if(is_null($allocations))
+				<label for="null_val">User has no allocation for today</label>
+			@else
 			<table class="table table-hover">
 				<thead>
 					<tr>
@@ -117,6 +125,7 @@
 					</tr>
 				</thead>
 				<tbody>
+
 					@foreach($allocations as $allocation)
 					<tr>
 						<th scope="row">{{$allocation->id}}</th>
@@ -141,6 +150,7 @@
 					@endforeach
 				</tbody>
 			</table>
+			@endif
 		</div>
 	</div>
 	@endforeach

@@ -44,7 +44,20 @@ class TransactionController extends Controller
                 }
             }
         }
-        return view('transaction',compact('users_allocations'));
+
+        // transaction myself
+        $myself_allocations = Auth::user()->allocations;
+        foreach ($myself_allocations as $allocationkey => $allocation) {
+            $allocation->outstock_subagent = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
+            $allocation->outstock_panel = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
+            $allocation->outstock_outlet = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_outlet')->toArray(), 'quantity'));
+            $allocation->outstock_counter = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_counter')->toArray(), 'quantity'));
+            foreach ($allocation->transactions as $trans_key => $transaction) {
+                $transaction->profit = $transaction->price-$allocation->modal_price;
+            }
+        }
+        // dd($myself_allocations);
+        return view('transaction',compact('users_allocations','myself_allocations'));
     }
 
     /**
@@ -121,7 +134,17 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        //
+        $allocations = Auth::user()->allocations;
+
+        // find sum
+        foreach ($allocations as $key => $allocation) {
+            $allocation->outstock_subagent = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
+            $allocation->outstock_panel = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
+            $allocation->outstock_outlet = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_outlet')->toArray(), 'quantity'));
+            $allocation->outstock_counter = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_counter')->toArray(), 'quantity'));
+            $allocation->availability = ($allocation->outstock_subagent+$allocation->outstock_panel+$allocation->outstock_outlet+$allocation->outstock_counter == $allocation->total_stock)? 0:$allocation->total_stock-$allocation->outstock_subagent+$allocation->outstock_panel+$allocation->outstock_outlet+$allocation->outstock_counter;
+        }
+        return view('transaction_edit',compact('transaction','allocations'));
     }
 
     /**
@@ -133,7 +156,27 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        $param = $request->all();
+        // use allocation id to find whether qty exceed allocation availability
+        $allocation = Allocation::find($param['allocation_id']);
+        $allocation->outstock_subagent = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_subagent')->toArray(), 'quantity'));
+        $allocation->outstock_panel = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_panel')->toArray(), 'quantity'));
+        $allocation->outstock_outlet = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_outlet')->toArray(), 'quantity'));
+        $allocation->outstock_counter = array_sum(array_column($allocation->transactions->where('buyer_type','outstock_counter')->toArray(), 'quantity'));
+        $allocation->exceed = ($allocation->outstock_subagent+$allocation->outstock_panel+$allocation->outstock_outlet+$allocation->outstock_counter-$param['old_quantity']+$param['quantity'] > $allocation->total_stock)? 1 : 0;
+        if ($allocation->exceed) {
+            return back();
+        }
+
+
+        $newtransaction = new Transaction;
+        $newtransaction->allocation_id      = $param['allocation_id'];
+        $newtransaction->quantity           = $param['quantity'];
+        $newtransaction->price              = $param['price'];
+        $newtransaction->buyer_type         = $param['buyer_type'];
+        $newtransaction->user_id            = Auth::user()->id;
+        $newtransaction->save();
+        return redirect('transaction');
     }
 
     /**
@@ -144,6 +187,7 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        $transaction->delete();
+        return redirect('transaction');
     }
 }
