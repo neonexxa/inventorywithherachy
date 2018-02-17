@@ -143,7 +143,7 @@
 						<td>{{ $allocation->user->name }}</td>
 						<td>{{ $allocation->stock->item_name }}</td>
 						<td>{{$allocation->total_stock}}</td>
-						<td>{{$allocation->modal_price}}</td>
+						<td>RM {{$allocation->modal_price}}</td>
 						<td>{{ (is_null($allocation->outstock_counter))? 0 : $allocation->outstock_counter }}</td>
 						<td>{{ (is_null($allocation->outstock_outlet))? 0 : $allocation->outstock_outlet }}</td>
 						<td>{{ (is_null($allocation->outstock_panel))? 0 : $allocation->outstock_panel }}</td>

@@ -57,14 +57,14 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
-						<th scope="col">QTY</th>
-						<th scope="col">Selling Price</th>
-						<th scope="col">Modal Price</th>
-						<th scope="col">Profit</th>
-						<th scope="col">Transaction Date</th>
-						<th scope="col">Buyer Type</th>
-						<th scope="col">Action</th>
+						<th scope="col" width="30">#</th>
+						<th scope="col" width="100">Quantity</th>
+						<th scope="col" width="200">Selling Price</th>
+						<th scope="col" width="200">Modal Price</th>
+						<th scope="col" width="200">Profit</th>
+						<th scope="col" width="300">Transaction Date/Time</th>
+						<th scope="col" width="200">Buyer Type</th>
+						<th scope="col" width="200">Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,9 +74,9 @@
 					<tr>
 						<th scope="row">{{$transaction->id}}</th>
 						<td>{{$transaction->quantity}}</td>
-						<td>RM {{$transaction->price}}</td>
-						<td>RM {{$allocation->modal_price}}</td>
-						<td>RM {{$transaction->profit*$transaction->quantity}}</td>
+						<td>RM{{$transaction->price}}</td>
+						<td>RM{{$allocation->modal_price}}</td>
+						<td>RM{{$transaction->profit*$transaction->quantity}}</td>
 						<td>{{$transaction->created_at}}</td>
 						<td>{{$transaction->buyer_type}}</td>
 						<td>
@@ -125,7 +125,7 @@
 		</label>
         @foreach ($allocations as $allocationkey => $allocation) 
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-10">
 					<label for="allocation">{{ $allocation->stock->item_name }} , Stock/Allocation Date : {{\Carbon\Carbon::parse($allocation->created_at)->format('Y-m-d')}}</label>
 					<br>
 					{{-- transaction filter begin --}}
@@ -142,12 +142,13 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th scope="col">#</th>
-								<th scope="col">QTY</th>
-								<th scope="col">Selling Price</th>
-								<th scope="col">Modal Price</th>
-								<th scope="col">Profit</th>
-								<th scope="col">Date</th>
+								<th scope="col" width="30">#</th>
+								<th scope="col" width="100">Quantity</th>
+								<th scope="col" width="200">Selling Price</th>
+								<th scope="col" width="200">Modal Price</th>
+								<th scope="col" width="200">Profit</th>
+								<th scope="col" width="300">Transaction Date/Time</th>
+								<th scope="col" width="200">Buyer Type</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -155,10 +156,11 @@
 							<tr>
 								<th scope="row">{{$transaction->id}}</th>
 								<td>{{$transaction->quantity}}</td>
-								<td>RM {{$transaction->price}}</td>
-								<td>RM {{$allocation->modal_price}}</td>
-								<td>RM {{$transaction->profit*$transaction->quantity}}</td>
+								<td>RM{{$transaction->price}}</td>
+								<td>RM{{$allocation->modal_price}}</td>
+								<td>RM{{$transaction->profit*$transaction->quantity}}</td>
 								<td>{{$transaction->created_at}}</td>
+								<td>{{$transaction->buyer_type}}</td>
 								{{-- <td>
 									<a class="btn btn-warning" href="{{ route('stock.edit',['stock'=> $stock->id]) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> 
 									<form action="{{route('stock.destroy',['stock'=>$stock->id])}}" method="POST">
