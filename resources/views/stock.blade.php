@@ -26,12 +26,19 @@
 					<td>{{$stock->item_name}}</td>
 					<td>{{$stock->item_code}}</td>
 					<td>
-						<a class="btn btn-warning" href="{{ route('stock.edit',['stock'=> $stock->id]) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> 
+						<!-- <form class="form-inline"> -->
+						
+
 						<form action="{{route('stock.destroy',['stock'=>$stock->id])}}" method="POST">
-							{{ csrf_field() }}
+							{{ csrf_field() }} 
 							<input type="hidden" name="_method" value="delete">
 							<button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+							<a class="btn btn-warning" href="{{ route('stock.edit',['stock'=> $stock->id]) }}">
+							<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+
 						</form>
+						<!-- </form> -->
 					</td>
 				</tr>
 				@endforeach
