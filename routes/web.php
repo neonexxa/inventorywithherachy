@@ -23,4 +23,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('transaction','TransactionController');
 Route::resource('allocation','AllocationController');
 Route::resource('stock','StockController');
+Route::resource('role','RoleController');
 
