@@ -19,6 +19,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profit', 'HomeController@profitsum')->name('profit');
 
 Route::resource('transaction','TransactionController');
 Route::resource('allocation','AllocationController');

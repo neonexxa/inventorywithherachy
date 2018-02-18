@@ -46,6 +46,7 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                            <li><a href="{{ route('profit') }}">Profit</a></li>
                             <li><a href="{{ route('transaction.index') }}">Transaction</a></li>
                             <li><a href="{{ route('allocation.index') }}">Allocation</a></li>
                             @if(Auth::user()->role < 2) {{-- admin role 1 --}}
@@ -113,5 +114,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>
